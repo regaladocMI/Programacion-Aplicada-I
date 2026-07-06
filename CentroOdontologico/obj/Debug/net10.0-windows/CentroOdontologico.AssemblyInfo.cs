@@ -11,12 +11,12 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyCompanyAttribute("Prestamos")]
+[assembly: System.Reflection.AssemblyCompanyAttribute("CentroOdontologico")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d678a6cd60aadd8d30f8211f42da331802301918")]
-[assembly: System.Reflection.AssemblyProductAttribute("Prestamos")]
-[assembly: System.Reflection.AssemblyTitleAttribute("Prestamos")]
+[assembly: System.Reflection.AssemblyProductAttribute("CentroOdontologico")]
+[assembly: System.Reflection.AssemblyTitleAttribute("CentroOdontologico")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
 [assembly: System.Runtime.Versioning.TargetPlatformAttribute("Windows7.0")]
 [assembly: System.Runtime.Versioning.SupportedOSPlatformAttribute("Windows7.0")]
