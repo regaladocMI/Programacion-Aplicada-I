@@ -1,0 +1,76 @@
+﻿<Window x:Class="Prestamo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Prestamo"
+        mc:Ignorable="d"
+        Title="Prestamo" Height="450" Width="600">
+    <Grid Margin="50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Cliente:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtCliente" Grid.Row="0" Grid.Column="1" Height="24" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Monto a pagar:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="3" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtMontoPagar" Grid.Row="0" Grid.Column="4" Height="24" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Fch. Ven.:" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"/>
+            <DatePicker x:Name="dtpFechaVen" Grid.Row="2" Grid.Column="1" Height="24"/>
+
+            <TextBlock Text="Fch. Pago:" VerticalAlignment="Center" Grid.Row="2" Grid.Column="3" Margin="0,0,10,0"/>
+            <DatePicker x:Name="dtpFechaPago" Grid.Row="2" Grid.Column="4" Height="24"/>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <Button x:Name="btnCalcular" Content="Calcular" Width="85" Height="28" Margin="0,0,15,0" Click="btnCalcular_Click"/>
+            <Button x:Name="btnNuevo" Content="Nuevo" Width="85" Height="28" Margin="0,0,15,0" Click="btnNuevo_Click"/>
+            <Button x:Name="btnFinalizar" Content="Finalizar" Width="85" Height="28" Click="btnFinalizar_Click"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Días de mora:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtDiasMora" Grid.Row="0" Grid.Column="1" Height="24" IsReadOnly="True" Background="#FFF5E5" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Mora en S/.:" VerticalAlignment="Center" Grid.Row="0" Grid.Column="3" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtMoraSoles" Grid.Row="0" Grid.Column="4" Height="24" IsReadOnly="True" Background="#FFF5E5" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Mora en %:" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtMoraPorcentaje" Grid.Row="2" Grid.Column="1" Height="24" IsReadOnly="True" Background="#FFF5E5" VerticalContentAlignment="Center"/>
+
+            <TextBlock Text="Monto a pagar:" VerticalAlignment="Center" Grid.Row="2" Grid.Column="3" Margin="0,0,10,0"/>
+            <TextBox x:Name="txtMontoTotal" Grid.Row="2" Grid.Column="4" Height="24" IsReadOnly="True" Background="#FFF5E5" VerticalContentAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
