@@ -3,4 +3,5 @@
   <Project Path="Imagenes/Imagenes.csproj" Id="a9f85deb-1782-4459-835e-4e7f056ead6b" />
   <Project Path="Imagenes2/Imagenes2.csproj" Id="019e421d-0c0e-4c11-985d-d25e0d604951" />
   <Project Path="Tragamonedas/Tragamonedas.csproj" />
+  <Project Path="TragamonedasV2/TragamonedasV2.csproj" Id="fdb6cf89-fb39-4a81-93d4-d1f0c8007cea" />
 </Solution>
