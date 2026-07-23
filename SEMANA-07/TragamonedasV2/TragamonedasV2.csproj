@@ -8,4 +8,11 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <!-- Incluir automáticamente cualquier archivo dentro de la carpeta Imagenes en la salida -->
+  <ItemGroup>
+    <Content Include="Imagenes\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
