@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="MenusContextuales/MenusContextuales.csproj" />
   <Project Path="Temperaturas/Temperaturas.csproj" Id="93df3482-b1c6-4317-bcb7-e68ac3e218c7" />
+  <Project Path="Votos/Votos.csproj" Id="521f7f6f-1c40-48b6-a898-74278534a6bd" />
 </Solution>
