@@ -9,7 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Imagenes\1C.png" />
+    <None Remove="Imagenes\1D.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="5.3.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Imagenes\1C.png" />
+    <Resource Include="Imagenes\1D.png" />
   </ItemGroup>
 
 </Project>

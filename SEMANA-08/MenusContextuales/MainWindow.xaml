@@ -27,12 +27,12 @@
                 <ContextMenu>
                     <MenuItem Header="Cortar" Command="Cut">
                         <MenuItem.Icon>
-                            <Image Source="\Imagenes\1C.png"/>
+                            <Image Source="/Imagenes/1C.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Copiar" Command="Copy">
                         <MenuItem.Icon>
-                            <Image Source="Imagenes\1D.png"/>
+                            <Image Source="/Imagenes/1D.png"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="Pegar" Command="Paste">
