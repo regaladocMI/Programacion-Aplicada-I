@@ -8,40 +8,47 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <!-- Botón con menú contextual básico -->
-        <Button Content="Hacer Click Derecho" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Menu Item 1"/>
-                    <MenuItem Header="Menu Item 2"/>
+        <DockPanel LastChildFill="true">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Archivo">
+                    <MenuItem Header="Nuevo"/>
+                    <MenuItem Header="Abrir"/>
+                    <MenuItem Header="Guardar"/>
                     <Separator/>
-                    <MenuItem Header="Menu Item 3"/>
-                </ContextMenu>
-            </Button.ContextMenu>
-        </Button>
+                    <MenuItem Header="Salir" Click="MenuItem_Click"/>
+                </MenuItem>
+                <MenuItem Header="Herramientas">
+                    <MenuItem Header="Administrar Usuarios"/>
+                    <MenuItem Header="Mostrar Grupos" IsChecked="True"/>
+                </MenuItem>
 
-        <!-- TextBox con menú contextual avanzado, comandos e iconos -->
-        <TextBox HorizontalAlignment="Center" Margin="0,278,0,0" TextWrapping="Wrap" 
-                 Text="Click derecho aqui para desplegar Menu Contextual" Width="333" Height="25" VerticalAlignment="Top">
-            <TextBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Cortar" Command="Cut">
-                        <MenuItem.Icon>
-                            <Image Source="/Imagenes/1C.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Copiar" Command="Copy">
-                        <MenuItem.Icon>
-                            <Image Source="/Imagenes/1D.png"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="Pegar" Command="Paste">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon Kind="ContentPaste" Width="18"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </ContextMenu>
-            </TextBox.ContextMenu>
-        </TextBox>
+            </Menu>
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar >
+                    <Button Content="Nuevo" />
+                    <Button Content="Abrir" />
+                    <Button Content="Guardar" />
+                </ToolBar>
+                <ToolBar >
+                    <Button Command="Cut">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="CutleryForkKnife"></materialDesign:PackIcon>
+                            <Label Content="Cortar"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="Copy">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Imagenes/1C.png" Width="18"></Image>
+                            <Label Content="Copiar"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="Paste" Content="Pegar" />
+                </ToolBar>
+            </ToolBarTray>
+            <StackPanel>
+                <TextBox TextWrapping="Wrap" Text="TextBox" Height="171"/>
+            </StackPanel>
+        </DockPanel>
+
     </Grid>
 </Window>
