@@ -1,3 +1,10 @@
-﻿.vs/
-obj/
-/SEMANA-07/Tragamonedas/bin/Debug/net10.0-windows
+﻿**/[Oo]bj/
+**/[Bb]in/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+Thumbs.db
+Desktop.ini
+.BIN/
