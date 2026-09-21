@@ -1,0 +1,9 @@
+/ Ejemplo de Comando en ViewModel WPF para habilitar/deshabilitar botón
+private async Task<bool> CanDeleteCategoryAsync(int categoryId) {
+string sql = "SELECT COUNT(1) FROM Products WHERE CategoryID = @ID";
+using (SqlCommand cmd = new SqlCommand(sql, connection)) {
+cmd.Parameters.Add("@ID", SqlDbType.Int).Value = categoryId;
+int count = (int)await cmd.ExecuteScalarAsync();
+return count == 0; // Retorna false si existen productos dependientes
+}
+}

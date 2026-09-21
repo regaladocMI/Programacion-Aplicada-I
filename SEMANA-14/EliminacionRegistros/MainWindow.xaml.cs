@@ -10,6 +10,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Threading.Tasks;
 
 
 namespace EliminacionRegistros
