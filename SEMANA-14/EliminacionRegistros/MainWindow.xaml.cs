@@ -23,170 +23,387 @@ namespace EliminacionRegistros
     {
         string cn = ConfigurationManager.ConnectionStrings["EliminacionRegistros.Properties.Settings.Northwind"].ConnectionString;
 
+
         public MainWindow()
         {
             InitializeComponent();
+            CargarListaCategorias();
+
         }
 
-        private void btnNuevo_Click(object sender, RoutedEventArgs e)
+        private void Window_Loaded(
+            object sender,
+            RoutedEventArgs e)
         {
-            this.Nuevo();
-        }
-
-        private void Nuevo()
-        {
-            txtId.Clear();
-            txtNombre.Clear();
-            txtDescripcion.Clear();
-            txtNombre.Focus();
-        }
-
-        private void btnAgregar_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string id = txtId.Text;
-
-                using (SqlConnection conn = new SqlConnection(cn))
-                {
-                    conn.Open();
-                    SqlCommand cmd = conn.CreateCommand();
-
-                    if (string.IsNullOrEmpty(id))
-                    {
-                        cmd.CommandText = "INSERT INTO Categories(CategoryName,Description) VALUES(@Nombre,@Descripcion); select SCOPE_IDENTITY();";
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.Parameters.Add("@Nombre", System.Data.SqlDbType.NVarChar, 15).Value = txtNombre.Text;
-                        cmd.Parameters.Add("@Descripcion", System.Data.SqlDbType.NVarChar, -1).Value = string.IsNullOrEmpty(txtDescripcion.Text) ? (Object)DBNull.Value : txtDescripcion.Text;
-                        int idGenerado = Convert.ToInt32(cmd.ExecuteScalar());
-
-                        MessageBox.Show($"Categoria agregada con Id {idGenerado}");
-                        this.Nuevo();
-                        this.CargarListaCategorias();
-                    }
-                    else
-                    {
-                        cmd.CommandText = @"UPDATE categories SET CategoryName=@Nombre,
-                                            Description=@Descripcion 
-                                            WHERE CategoryID=@Id";
-                        cmd.CommandType = System.Data.CommandType.Text;
-                        cmd.Parameters.Add("@Nombre", System.Data.SqlDbType.NVarChar, 15).Value = txtNombre.Text;
-                        cmd.Parameters.Add("@Descripcion", System.Data.SqlDbType.NVarChar, -1).Value = string.IsNullOrEmpty(txtDescripcion.Text) ? (Object)DBNull.Value : txtDescripcion.Text;
-                        cmd.Parameters.Add("@Id", System.Data.SqlDbType.Int).Value = id;
-
-                        cmd.ExecuteNonQuery();
-
-                        MessageBox.Show($"Categoria actualizada");
-                        this.CargarListaCategorias();
-                    }
-
-                }
-            }
-            catch (SqlException ex)
-            {
-                MessageBox.Show($"Error en sql {ex.Number}, {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error general {ex.Message}");
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.CargarListaCategorias();
+            CargarListaCategorias();
         }
 
         private void CargarListaCategorias()
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(cn))
+                using (SqlConnection conn =
+                       new SqlConnection(cn))
                 {
-                    string query = "SELECT CategoryID,CategoryName,Description FROM Categories ORDER BY CategoryID";
-                    conn.Open();
-                    SqlCommand cmd = new SqlCommand(query, conn);
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    List<Categoria> lista = new List<Categoria>();
+                    string query = @"
+                        SELECT
+                            CategoryID,
+                            CategoryName,
+                            Description
+                        FROM Categories
+                        ORDER BY CategoryID";
 
-                    while (reader.Read())
+                    conn.Open();
+
+                    using (SqlCommand cmd =
+                           new SqlCommand(query, conn))
                     {
-                        lista.Add(new Categoria
+                        using (SqlDataReader reader =
+                               cmd.ExecuteReader())
                         {
-                            Id = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Descripcion = reader.IsDBNull(2) ? null : reader.GetString(2)
-                        });
+                            List<Categoria> lista =
+                                new List<Categoria>();
+
+                            while (reader.Read())
+                            {
+                                lista.Add(new Categoria
+                                {
+                                    Id = reader.GetInt32(0),
+
+                                    Nombre =
+                                        reader.GetString(1),
+
+                                    Descripcion =
+                                        reader.IsDBNull(2)
+                                        ? string.Empty
+                                        : reader.GetString(2)
+                                });
+                            }
+
+                            dgCategorias.ItemsSource = lista;
+                        }
                     }
-                    dgCategorias.ItemsSource = lista;
                 }
+
+                btnEliminar.IsEnabled = false;
             }
             catch (SqlException ex)
             {
-                MessageBox.Show($"Error en sql {ex.Number}, {ex.Message}");
+                txtEstado.Text =
+                    $"Error SQL {ex.Number}: {ex.Message}";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error general {ex.Message}");
+                txtEstado.Text =
+                    $"Error general: {ex.Message}";
             }
         }
 
-        private void dgCategorias_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void dgCategorias_SelectionChanged(
+            object sender,
+            SelectionChangedEventArgs e)
         {
             if (dgCategorias.SelectedItem != null)
             {
-                Categoria categoria = (Categoria)dgCategorias.SelectedItem;
+                Categoria categoria =
+                    (Categoria)dgCategorias.SelectedItem;
 
-                txtId.Text = categoria.Id.ToString();
-                txtNombre.Text = categoria.Nombre.ToString();
-                txtDescripcion.Text = categoria?.Descripcion;
+                txtIdCategoria.Text =
+                    categoria.Id.ToString();
+
+                txtNombre.Text =
+                    categoria.Nombre;
+
+                txtDescripcion.Text =
+                    categoria.Descripcion ?? string.Empty;
+
+
+                btnEliminar.IsEnabled = true;
+
+                txtEstado.Text =
+                    $"Categoría seleccionada: {categoria.Nombre}.";
             }
-        }
-
-        private void btnEliminar_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult respuesta = MessageBox.Show("¿esta seguro de eliminar el registro seleccionado?", "Eliminar", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (MessageBoxResult.Yes == respuesta)
+            else
             {
-                this.EliminarRegistro();
+                btnEliminar.IsEnabled = false;
             }
-
         }
 
-        private void EliminarRegistro()
+        private void btnNuevo_Click(
+            object sender,
+            RoutedEventArgs e)
         {
+            Nuevo();
+        }
+
+        private void Nuevo()
+        {
+            txtIdCategoria.Clear();
+            txtNombre.Clear();
+            txtDescripcion.Clear();
+
+            dgCategorias.SelectedItem = null;
+            btnEliminar.IsEnabled = false;
+
+            txtEstado.Text =
+                "Seleccione una categoría.";
+
+            txtNombre.Focus();
+        }
+
+        private void btnAgregar_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text))
+            {
+                txtEstado.Text =
+                    "Ingrese el nombre de la categoría.";
+
+                return;
+            }
+
             try
             {
-                string query = "DELETE FROM Categories WHERE CategoryId = @IdCategoria";
-                using (SqlConnection con = new SqlConnection(cn))
+                string id = txtIdCategoria.Text;
+
+                using (SqlConnection conn =
+                       new SqlConnection(cn))
                 {
-                    con.Open();
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    conn.Open();
+
+                    using (SqlCommand cmd =
+                           conn.CreateCommand())
                     {
-                        cmd.Parameters.Add("@IdCategoria", System.Data.SqlDbType.Int).Value = txtId.Text;
-
-                        int filaAfectadas = cmd.ExecuteNonQuery();
-
-                        if (filaAfectadas > 0)
+                        if (string.IsNullOrEmpty(id))
                         {
-                            MessageBox.Show("Registro eliminado");
-                            this.CargarListaCategorias();
+                            cmd.CommandText = @"
+                                INSERT INTO Categories(
+                                    CategoryName,
+                                    Description
+                                )
+                                VALUES(
+                                    @Nombre,
+                                    @Descripcion
+                                );
+
+                                SELECT SCOPE_IDENTITY();";
+
+                            cmd.Parameters.Add(
+                                "@Nombre",
+                                SqlDbType.NVarChar,
+                                15
+                            ).Value = txtNombre.Text;
+
+                            cmd.Parameters.Add(
+                                "@Descripcion",
+                                SqlDbType.NVarChar,
+                                -1
+                            ).Value =
+                                string.IsNullOrWhiteSpace(
+                                    txtDescripcion.Text)
+                                ? DBNull.Value
+                                : txtDescripcion.Text;
+
+                            int idGenerado =
+                                Convert.ToInt32(
+                                    cmd.ExecuteScalar()
+                                );
+
+                            txtEstado.Text =
+                                $"Categoría agregada con ID {idGenerado}.";
                         }
                         else
                         {
-                            MessageBox.Show("El Registro no existe");
+                            cmd.CommandText = @"
+                                UPDATE Categories
+                                SET
+                                    CategoryName = @Nombre,
+                                    Description = @Descripcion
+                                WHERE CategoryID = @Id";
+
+                            cmd.Parameters.Add(
+                                "@Nombre",
+                                SqlDbType.NVarChar,
+                                15
+                            ).Value = txtNombre.Text;
+
+                            cmd.Parameters.Add(
+                                "@Descripcion",
+                                SqlDbType.NVarChar,
+                                -1
+                            ).Value =
+                                string.IsNullOrWhiteSpace(
+                                    txtDescripcion.Text)
+                                ? DBNull.Value
+                                : txtDescripcion.Text;
+
+                            cmd.Parameters.Add(
+                                "@Id",
+                                SqlDbType.Int
+                            ).Value = Convert.ToInt32(id);
+
+                            int filas =
+                                cmd.ExecuteNonQuery();
+
+                            txtEstado.Text =
+                                filas > 0
+                                ? "Categoría actualizada correctamente."
+                                : "No se encontró la categoría.";
                         }
                     }
                 }
+
+                Nuevo();
+                CargarListaCategorias();
             }
             catch (SqlException ex)
             {
-                if (ex.Number == 547)
+                txtEstado.Text =
+                    $"Error SQL {ex.Number}: {ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                txtEstado.Text =
+                    $"Error general: {ex.Message}";
+            }
+        }
+
+        private void btnEliminar_Click(
+            object sender,
+            RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    txtIdCategoria.Text))
+            {
+                txtEstado.Text =
+                    "Primero seleccione una categoría.";
+
+                return;
+            }
+
+            MessageBoxResult respuesta =
+                MessageBox.Show(
+                    "¿Está seguro de eliminar la categoría " +
+                    "y todos sus productos?",
+                    "Confirmar eliminación",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning
+                );
+
+            if (respuesta == MessageBoxResult.Yes)
+            {
+                EiminarRegistro();
+            }
+            else
+            {
+                txtEstado.Text =
+                    "Eliminación cancelada.";
+            }
+        }
+
+        private void EiminarRegistro()
+        {
+            if (!int.TryParse(
+                    txtIdCategoria.Text,
+                    out int idCategoria))
+            {
+                txtEstado.Text =
+                    "El ID de la categoría no es válido.";
+
+                return;
+            }
+
+            using (SqlConnection conn =
+                   new SqlConnection(cn))
+            {
+                conn.Open();
+
+                SqlTransaction transaccion =
+                    conn.BeginTransaction();
+
+                try
                 {
-                    MessageBox.Show("No es posible eliminar el registro seleccionado, contiene productos");
+
+                    string eliminarProductos = @"
+                        DELETE FROM Products
+                        WHERE CategoryID = @IdCategoria";
+
+                    int productosEliminados;
+
+                    using (SqlCommand cmdProductos =
+                           new SqlCommand(
+                               eliminarProductos,
+                               conn,
+                               transaccion))
+                    {
+                        cmdProductos.Parameters.Add(
+                            "@IdCategoria",
+                            SqlDbType.Int
+                        ).Value = idCategoria;
+
+                        productosEliminados =
+                            cmdProductos.ExecuteNonQuery();
+                    }
+
+
+                    string eliminarCategoria = @"
+                        DELETE FROM Categories
+                        WHERE CategoryID = @IdCategoria";
+
+                    int categoriaEliminada;
+
+                    using (SqlCommand cmdCategoria =
+                           new SqlCommand(
+                               eliminarCategoria,
+                               conn,
+                               transaccion))
+                    {
+                        cmdCategoria.Parameters.Add(
+                            "@IdCategoria",
+                            SqlDbType.Int
+                        ).Value = idCategoria;
+
+                        categoriaEliminada =
+                            cmdCategoria.ExecuteNonQuery();
+                    }
+
+                    if (categoriaEliminada == 0)
+                    {
+                        throw new Exception(
+                            "La categoría seleccionada no existe."
+                        );
+                    }
+
+
+                    transaccion.Commit();
+
+                    txtEstado.Text =
+                        $"Categoría eliminada correctamente. " +
+                        $"Productos eliminados: " +
+                        $"{productosEliminados}.";
+
+                    Nuevo();
+                    CargarListaCategorias();
+                }
+                catch (Exception ex)
+                {
+
+                    try
+                    {
+                        transaccion.Rollback();
+                    }
+                    catch
+                    {
+                    }
+
+                    txtEstado.Text =
+                        $"No se realizó la eliminación. " +
+                        $"Se ejecutó Rollback(). " +
+                        $"Detalle: {ex.Message}";
                 }
             }
         }
+
     }
 }
